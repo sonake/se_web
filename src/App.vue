@@ -1,12 +1,6 @@
 <template>
   <div id="app">
-    <div class="login_container">
-      <div class="login_box">
-        <div class="avatar_box">
-          <img src="../assets/logo.png">
-        </div>
-      </div>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -16,6 +10,6 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
 
 </style>
