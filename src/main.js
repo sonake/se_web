@@ -6,7 +6,7 @@ import './assets/css/global.css'
 import './assets/iconfont/iconfont.css'
 import axios from 'axios'
 
-axios.defaults.baseURL = '127.0.0.1:8080/v1'
+axios.defaults.baseURL = 'localhost:9030/'
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 

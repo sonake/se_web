@@ -20,7 +20,7 @@
             <h3 class="title">
               欢迎登陆
             </h3>
-            <lang-select class="set-language" />
+            <lang-select class="set-language"/>
           </div>
           <!--账户-->
           <el-form-item prop="account">
@@ -31,9 +31,10 @@
             <el-input type="password" prefix-icon="iconfont icon-password" v-model="loginForm.password"></el-input>
           </el-form-item>
           <!--验证码-->
-          <!--          <el-form-item prop="code">-->
-          <!--            <el-input v-model="loginForm.code"></el-input>-->
-          <!--          </el-form-item>-->
+          <el-form-item prop="code" class="code-input">
+            <el-input prefix-icon="iconfont icon-customization" v-model="loginForm.code" style="width: 50%"></el-input>
+            <img :src="imageCode" class="code-image" @click="getCodeImage">
+          </el-form-item>
           <!--按钮区域-->
           <el-form-item class="login_button">
             <el-button type="primary" @click="login">登陆</el-button>
@@ -49,6 +50,9 @@
 </template>
 
 <script>
+import { randomNum } from '../util'
+import axios from 'axios'
+
 export default {
   data () {
     return {
@@ -66,10 +70,18 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 5, max: 15, message: '长度在 5 到 15 个字符', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '请输入验证码', trigger: 'blur' }
         ]
-      }
+      },
+      randomId: randomNum(24, 16),
+      imageCode: ''
 
     }
+  },
+  mounted () {
+    this.getCodeImage()
   },
   methods: {
     // 点击重置按钮，重置表单数据
@@ -80,6 +92,24 @@ export default {
       this.$refs.loginFormRef.validate(valid => {
         if (!valid) return 0
         this.$http.post('login', this.loginForm)
+      })
+    },
+    // 获取验证码
+    getCodeImage () {
+      console.log(this.randomId + 'sssssssssss')
+      axios({
+        method: 'GET',
+        url: `auth/captcha?key=${this.randomId}`,
+        responseType: 'arraybuffer'
+      }).then(res => {
+        console.log('pppp')
+        return 'data:image/png;base64,' + btoa(
+          new Uint8Array(res.data)
+            .reduce((data, byte) => data + String.fromCharCode(byte), '')
+        )
+      }).then((res) => {
+        console.log(res)
+        this.imageCode = res
       })
     }
   }
@@ -92,20 +122,24 @@ export default {
     height: 100%;
     background-image: url('../assets/img/light-streaks-32906012.jpg');
   }
+
   .login-info {
     position: absolute;
     left: -300%;
     top: 44%;
     margin-top: -100px;
     color: #fff;
+
     .title {
       font-size: 1.8rem;
       font-weight: 600;
     }
+
     .sub-title {
       font-size: 1.5rem;
       margin: .3rem 0 .7rem 1rem;
     }
+
     .desc {
       font-size: .96rem;
       line-height: 1.9rem;
@@ -114,7 +148,7 @@ export default {
 
   .login_box {
     width: 350px;
-    height: 380px;
+    height: 450px;
     background-color: #eeeeee;
     border-radius: 3px;
     position: absolute;
@@ -154,6 +188,12 @@ export default {
     width: 100%;
     padding: 0 20px;
     box-sizing: border-box;
+
+    .code-image {
+      display: inline-block;
+      vertical-align: top;
+      cursor: pointer;
+    }
   }
 
   .login-footer {
@@ -163,6 +203,7 @@ export default {
     font-size: 14px;
     color: #0086b3;
   }
+
   .title-container {
     position: relative;
 
