@@ -23,8 +23,8 @@
             <lang-select class="set-language"/>
           </div>
           <!--账户-->
-          <el-form-item prop="account">
-            <el-input prefix-icon="iconfont icon-account" v-model="loginForm.account"></el-input>
+          <el-form-item prop="username">
+            <el-input prefix-icon="iconfont icon-account" v-model="loginForm.username"></el-input>
           </el-form-item>
           <!--密码-->
           <el-form-item prop="password">
@@ -32,7 +32,7 @@
           </el-form-item>
           <!--验证码-->
           <el-form-item prop="code" class="code-input">
-            <el-input prefix-icon="iconfont icon-customization" v-model="loginForm.code" style="width: 50%"></el-input>
+            <el-input prefix-icon="iconfont icon-customization" v-model="loginForm.code" style="width: 60%"></el-input>
             <img :src="imageCode" class="code-image" @click="getCodeImage">
           </el-form-item>
           <!--按钮区域-->
@@ -58,12 +58,15 @@ export default {
     return {
       // 登陆表单绑定数据
       loginForm: {
-        account: 'admin',
-        password: '123456'
+        username: 'sonake',
+        password: '1234qwer',
+        code: '',
+        grant_type: 'password',
+        key: ''
       },
       // 表单验证
       ruleForm: {
-        account: [
+        username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 5, max: 15, message: '长度在 5 到 15 个字符', trigger: 'blur' }
         ],
@@ -90,25 +93,27 @@ export default {
     },
     login () {
       this.$refs.loginFormRef.validate(valid => {
-        if (!valid) return 0
-        this.$http.post('login', this.loginForm)
+        debugger
+        if (valid) {
+          this.$login('auth/oauth/token', this.loginForm).then(res => {
+            debugger
+            console.log(res)
+          })
+        }
       })
     },
     // 获取验证码
     getCodeImage () {
-      console.log(this.randomId + 'sssssssssss')
       axios({
         method: 'GET',
         url: `auth/captcha?key=${this.randomId}`,
         responseType: 'arraybuffer'
       }).then(res => {
-        console.log('pppp')
         return 'data:image/png;base64,' + btoa(
           new Uint8Array(res.data)
             .reduce((data, byte) => data + String.fromCharCode(byte), '')
         )
       }).then((res) => {
-        console.log(res)
         this.imageCode = res
       })
     }
@@ -192,7 +197,9 @@ export default {
     .code-image {
       display: inline-block;
       vertical-align: top;
-      cursor: pointer;
+      //cursor: pointer;
+      height: 40px;
+      float: right;
     }
   }
 

@@ -8,7 +8,7 @@
  * @param {string} cFormat
  * @returns {string}
  */
-export function parseTime(time, cFormat) {
+export function parseTime (time, cFormat) {
   if (arguments.length === 0) {
     return null
   }
@@ -34,16 +34,18 @@ export function parseTime(time, cFormat) {
     s: date.getSeconds(),
     a: date.getDay()
   }
-  const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
+  const timeStr = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') {
+      return ['日', '一', '二', '三', '四', '五', '六'][value]
+    }
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
     return value || 0
   })
-  return time_str
+  return timeStr
 }
 
 /**
@@ -51,7 +53,7 @@ export function parseTime(time, cFormat) {
  * @param {string} option
  * @returns {string}
  */
-export function formatTime(time, option) {
+export function formatTime (time, option) {
   if (('' + time).length === 10) {
     time = parseInt(time) * 1000
   } else {
@@ -93,7 +95,7 @@ export function formatTime(time, option) {
  * @param {string} url
  * @returns {Object}
  */
-export function getQueryObject(url) {
+export function getQueryObject (url) {
   url = url == null ? window.location.href : url
   const search = url.substring(url.lastIndexOf('?') + 1)
   const obj = {}
@@ -112,7 +114,7 @@ export function getQueryObject(url) {
  * @param {string} input value
  * @returns {number} output value
  */
-export function byteLength(str) {
+export function byteLength (str) {
   // returns the byte length of an utf8 string
   let s = str.length
   for (var i = str.length - 1; i >= 0; i--) {
@@ -128,7 +130,7 @@ export function byteLength(str) {
  * @param {Array} actual
  * @returns {Array}
  */
-export function cleanArray(actual) {
+export function cleanArray (actual) {
   const newArray = []
   for (let i = 0; i < actual.length; i++) {
     if (actual[i]) {
@@ -142,7 +144,7 @@ export function cleanArray(actual) {
  * @param {Object} json
  * @returns {Array}
  */
-export function param(json) {
+export function param (json) {
   if (!json) return ''
   return cleanArray(
     Object.keys(json).map(key => {
@@ -156,7 +158,7 @@ export function param(json) {
  * @param {string} url
  * @returns {Object}
  */
-export function param2Obj(url) {
+export function param2Obj (url) {
   const search = url.split('?')[1]
   if (!search) {
     return {}
@@ -176,7 +178,7 @@ export function param2Obj(url) {
  * @param {string} val
  * @returns {string}
  */
-export function html2Text(val) {
+export function html2Text (val) {
   const div = document.createElement('div')
   div.innerHTML = val
   return div.textContent || div.innerText
@@ -188,7 +190,7 @@ export function html2Text(val) {
  * @param {(Object|Array)} source
  * @returns {Object}
  */
-export function objectMerge(target, source) {
+export function objectMerge (target, source) {
   if (typeof target !== 'object') {
     target = {}
   }
@@ -210,7 +212,7 @@ export function objectMerge(target, source) {
  * @param {HTMLElement} element
  * @param {string} className
  */
-export function toggleClass(element, className) {
+export function toggleClass (element, className) {
   if (!element || !className) {
     return
   }
@@ -230,7 +232,7 @@ export function toggleClass(element, className) {
  * @param {string} type
  * @returns {Date}
  */
-export function getTime(type) {
+export function getTime (type) {
   if (type === 'start') {
     return new Date().getTime() - 3600 * 1000 * 24 * 90
   } else {
@@ -244,10 +246,10 @@ export function getTime(type) {
  * @param {boolean} immediate
  * @return {*}
  */
-export function debounce(func, wait, immediate) {
+export function debounce (func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
-  const later = function() {
+  const later = function () {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp
 
@@ -264,7 +266,7 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function(...args) {
+  return function (...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -286,7 +288,7 @@ export function debounce(func, wait, immediate) {
  * @param {Object} source
  * @returns {Object}
  */
-export function deepClone(source) {
+export function deepClone (source) {
   if (!source && typeof source !== 'object') {
     throw new Error('error arguments', 'deepClone')
   }
@@ -305,14 +307,14 @@ export function deepClone(source) {
  * @param {Array} arr
  * @returns {Array}
  */
-export function uniqueArr(arr) {
+export function uniqueArr (arr) {
   return Array.from(new Set(arr))
 }
 
 /**
  * @returns {string}
  */
-export function createUniqueString() {
+export function createUniqueString () {
   const timestamp = +new Date() + ''
   const randomNum = parseInt((1 + Math.random()) * 65536) + ''
   return (+(randomNum + timestamp)).toString(32)
@@ -324,7 +326,7 @@ export function createUniqueString() {
  * @param {string} cls
  * @returns {boolean}
  */
-export function hasClass(ele, cls) {
+export function hasClass (ele, cls) {
   return !!ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'))
 }
 
@@ -333,7 +335,7 @@ export function hasClass(ele, cls) {
  * @param {HTMLElement} elm
  * @param {string} cls
  */
-export function addClass(ele, cls) {
+export function addClass (ele, cls) {
   if (!hasClass(ele, cls)) ele.className += ' ' + cls
 }
 
@@ -342,14 +344,14 @@ export function addClass(ele, cls) {
  * @param {HTMLElement} elm
  * @param {string} cls
  */
-export function removeClass(ele, cls) {
+export function removeClass (ele, cls) {
   if (hasClass(ele, cls)) {
     const reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
     ele.className = ele.className.replace(reg, ' ')
   }
 }
 
-export function getFileType(filename) {
+export function getFileType (filename) {
   const startIndex = filename.lastIndexOf('.')
   if (startIndex !== -1) {
     return filename.substring(startIndex + 1, filename.length).toLowerCase()
@@ -358,14 +360,14 @@ export function getFileType(filename) {
   }
 }
 
-export function randomNum(len, radix) {
+export function randomNum (len, radix) {
   const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('')
   const uuid = []
   radix = radix || chars.length
 
   if (len) {
     // Compact form
-    for (let i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix ]
+    for (let i = 0; i < len; i++) uuid[i] = chars[ 0 | Math.random() * radix ]
   } else {
     // rfc4122, version 4 form
     let r
