@@ -80,7 +80,6 @@ export default {
       },
       randomId: randomNum(24, 16),
       imageCode: ''
-
     }
   },
   mounted () {
@@ -93,7 +92,6 @@ export default {
     },
     login () {
       this.$refs.loginFormRef.validate(valid => {
-        debugger
         if (valid) {
           this.$login('auth/oauth/token', this.loginForm).then(res => {
             debugger
@@ -106,7 +104,7 @@ export default {
     getCodeImage () {
       axios({
         method: 'GET',
-        url: `auth/captcha?key=${this.randomId}`,
+        url: `http://127.0.0.1:9030/auth/captcha?key=${this.randomId}`,
         responseType: 'arraybuffer'
       }).then(res => {
         return 'data:image/png;base64,' + btoa(
@@ -114,6 +112,7 @@ export default {
             .reduce((data, byte) => data + String.fromCharCode(byte), '')
         )
       }).then((res) => {
+        this.loginForm.key = this.randomId
         this.imageCode = res
       })
     }
