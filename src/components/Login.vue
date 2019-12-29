@@ -92,12 +92,15 @@ export default {
     },
     login () {
       this.$refs.loginFormRef.validate(valid => {
-        if (valid) {
-          this.$login('auth/oauth/token', this.loginForm).then(res => {
-            debugger
-            console.log(res)
-          })
-        }
+        if (!valid) return
+        this.$login('auth/oauth/token', this.loginForm).then(res => {
+          if (res.status !== 200) return this.$msg.error('登陆失败！')
+          this.$msg.success('登陆成功！')
+          // 1.将登陆成功之后的token，保存到客户端的storage
+          window.sessionStorage.setItem('token', res.data.token)
+          // 2.通过编程式导航跳转至后台主页，路由地址是/home
+          this.$router.push('/home')
+        })
       })
     },
     // 获取验证码

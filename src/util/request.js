@@ -31,9 +31,7 @@ service.interceptors.request.use(
       //     _config = queryRefreshToken(_config, refreshToken)
       //   } else {
       //     if (getToken()) {
-      //       _config.headers['Authorization'] = 'bearer ' + getToken()
-      //     }
-      //   }
+      _config.headers['Authorization'] = 'bearer ' + window.sessionStorage.getItem('token')
       // }
     } catch (e) {
       console.error(e)
