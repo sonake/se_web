@@ -10,39 +10,39 @@ const service = axios.create({
   }
 })
 
-const refreshService = axios.create({
-  baseURL: 'http://localhost:9030/',
-  timeout: 10000,
-  responseType: 'json',
-  validateStatus (status) {
-    return status === 200
-  }
-})
+// const refreshService = axios.create({
+//   baseURL: 'http://localhost:9030/',
+//   timeout: 10000,
+//   responseType: 'json',
+//   validateStatus (status) {
+//     return status === 200
+//   }
+// })
 
-service.interceptors.request.use(
-  config => {
-    let _config = config
-    try {
-      // const expireTime = getExpireTime()
-      // if (expireTime) {
-      //   const left = expireTime - new Date().getTime()
-      //   const refreshToken = getRefreshToken()
-      //   if (left < 5 * 60 * 1000 && refreshToken) {
-      //     _config = queryRefreshToken(_config, refreshToken)
-      //   } else {
-      //     if (getToken()) {
-      _config.headers['Authorization'] = 'bearer ' + window.sessionStorage.getItem('token')
-      // }
-    } catch (e) {
-      console.error(e)
-    }
-    return _config
-  },
-  error => {
-    console.log(error)
-    return Promise.reject(error)
-  }
-)
+// service.interceptors.request.use(
+//   config => {
+//     let _config = config
+//     try {
+//       // const expireTime = getExpireTime()
+//       // if (expireTime) {
+//       //   const left = expireTime - new Date().getTime()
+//       //   const refreshToken = getRefreshToken()
+//       //   if (left < 5 * 60 * 1000 && refreshToken) {
+//       //     _config = queryRefreshToken(_config, refreshToken)
+//       //   } else {
+//       //     if (getToken()) {
+//       _config.headers['Authorization'] = 'bearer ' + window.sessionStorage.getItem('token')
+//       // }
+//     } catch (e) {
+//       console.error(e)
+//     }
+//     return _config
+//   },
+//   error => {
+//     console.log(error)
+//     return Promise.reject(error)
+//   }
+// )
 
 // response interceptor
 service.interceptors.response.use((config) => {
@@ -87,18 +87,19 @@ service.interceptors.response.use((config) => {
 })
 
 const request = {
-  refresh (url, params) {
-    params['grant_type'] = 'refresh_token'
-    return refreshService.post(url, params, {
-      transformRequest: [(params) => {
-        return tansParams(params)
-      }],
-      headers: {
-        'Authorization': 'Basic aGM6MTIzNDU2'
-      }
-    })
-  },
+  // refresh (url, params) {
+  //   params['grant_type'] = 'refresh_token'
+  //   return refreshService.post(url, params, {
+  //     transformRequest: [(params) => {
+  //       return tansParams(params)
+  //     }],
+  //     headers: {
+  //       'Authorization': 'Basic aGM6MTIzNDU2'
+  //     }
+  //   })
+  // },
   login (url, params) {
+    debugger
     params['grant_type'] = 'password'
     return service.post(url, params, {
       transformRequest: [(params) => {

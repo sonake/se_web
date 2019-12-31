@@ -1,14 +1,14 @@
 <template>
   <el-container class="home-container">
-    <el-header>
+    <el-header style="height: 80px">
       <div>
-        <img src="../assets/logo.jpg" alt="">
+        <img src="../assets/img/logo-head.jpg" alt="">
         <span>SC 管理后台</span>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
     </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="300px">
         <el-menu
           background-color="#333744"
           text-color="#fff"
@@ -72,7 +72,7 @@ export default {
 
 <style lang="less" scoped>
 .el-header{
-  background-color: #373d41;
+  background-color: #393E46;
   display: flex;
   justify-content: space-between;
   padding-left: 0;
@@ -82,16 +82,20 @@ export default {
   > div {
     display: flex;
     align-items: center;
+    img {
+      width: 300px;
+      height: 80px;
+    }
     span {
       margin-left: 15px;
     }
   }
 }
 .el-aside{
-  background-color: #333744;
+  background-color: #393E46;
 }
 .el-main{
-  background-color: #eaedf1;
+  background-color: #F8F8F8;
 }
 .home-container{
   height: 100%;

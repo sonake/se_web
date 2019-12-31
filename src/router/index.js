@@ -27,7 +27,7 @@ const router = new VueRouter({
 })
 
 // 挂载路由导航守卫
-router.beforeHooks((to, from, next) => {
+router.beforeEach((to, from, next) => {
   // to 将要访问的路径
   // from 代表从哪个路径来
   // next 一个函数，代表放行 next()放行，next('/login')强制跳转
