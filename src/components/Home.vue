@@ -8,30 +8,35 @@
       <el-button type="info" @click="logout">退出</el-button>
     </el-header>
     <el-container>
-      <el-aside width="300px">
+      <el-aside :width="isCollapse ? '64px': '300px'">
+        <div class="toggle-button" @click="toggleCollSpace">|||</div>
         <el-menu
           background-color="#333744"
           text-color="#fff"
-          active-text-color="#ffd04b">
+          active-text-color="#409EFF"
+          unique-opened :collapse="isCollapse" :collapse-transition="false">
           <el-submenu :index="item.id" v-for="item in menuList" :key="item.id">
             <!--一级菜单模板区-->
             <template slot="title">
               <!--图标-->
-              <i class="el-icon-location"></i>
+              <i class="iconObjs[item.id]"></i>
               <span>{{item.menuName}}}</span>
             </template>
             <!--二级菜单-->
             <el-menu-item :index="subItem.id" v-for="subItem in item.childrenNemuList" :key="subItem.id">
               <template slot="title">
                 <!--图标-->
-                <i class="el-icon-location"></i>
+                <i class="el-icon-menu"></i>
                 <span>{{subItem.menuItem}}}</span>
               </template>
             </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <!--路由占位符-->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -41,7 +46,11 @@ export default {
   data () {
     // 左侧菜单数据
     return {
-      menuList: []
+      menuList: [],
+      iconObjs: {
+        125: 'el-icon-setting'
+      },
+      isCollapse: false
     }
   },
   name: 'Home',
@@ -61,6 +70,10 @@ export default {
         if (res.code !== 200) return this.$msg.error(res.msg)
         this.menuList = res.data
       })
+    },
+    // 点击按钮切换菜单是否折叠
+    toggleCollSpace () {
+      this.isCollapse = !this.isCollapse
     }
   },
   // 获取所有菜单
@@ -93,6 +106,9 @@ export default {
 }
 .el-aside{
   background-color: #393E46;
+  .el-menu{
+    border-right: none;
+  }
 }
 .el-main{
   background-color: #F8F8F8;
@@ -100,4 +116,16 @@ export default {
 .home-container{
   height: 100%;
 }
+  .iconfont{
+    margin-right: 10px;
+  }
+  .toggle-button{
+    background-color: #cccccc;
+    font-size: 10px;
+    line-height: 24px;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+  }
 </style>

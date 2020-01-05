@@ -19,30 +19,30 @@ const service = axios.create({
 //   }
 // })
 
-// service.interceptors.request.use(
-//   config => {
-//     let _config = config
-//     try {
-//       // const expireTime = getExpireTime()
-//       // if (expireTime) {
-//       //   const left = expireTime - new Date().getTime()
-//       //   const refreshToken = getRefreshToken()
-//       //   if (left < 5 * 60 * 1000 && refreshToken) {
-//       //     _config = queryRefreshToken(_config, refreshToken)
-//       //   } else {
-//       //     if (getToken()) {
-//       _config.headers['Authorization'] = 'bearer ' + window.sessionStorage.getItem('token')
-//       // }
-//     } catch (e) {
-//       console.error(e)
-//     }
-//     return _config
-//   },
-//   error => {
-//     console.log(error)
-//     return Promise.reject(error)
-//   }
-// )
+service.interceptors.request.use(
+  config => {
+    let _config = config
+    try {
+      // const expireTime = getExpireTime()
+      // if (expireTime) {
+      //   const left = expireTime - new Date().getTime()
+      //   const refreshToken = getRefreshToken()
+      //   if (left < 5 * 60 * 1000 && refreshToken) {
+      //     _config = queryRefreshToken(_config, refreshToken)
+      //   } else {
+      //     if (getToken()) {
+      _config.headers['Authorization'] = 'bearer ' + window.sessionStorage.getItem('token')
+      // }
+    } catch (e) {
+      console.error(e)
+    }
+    return _config
+  },
+  error => {
+    console.log(error)
+    return Promise.reject(error)
+  }
+)
 
 // response interceptor
 service.interceptors.response.use((config) => {
