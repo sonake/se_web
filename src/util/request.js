@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import { getToken } from '../util/auth'
 
 const service = axios.create({
   baseURL: 'http://localhost:9030/',
@@ -30,9 +31,9 @@ service.interceptors.request.use(
       //   if (left < 5 * 60 * 1000 && refreshToken) {
       //     _config = queryRefreshToken(_config, refreshToken)
       //   } else {
-      //     if (getToken()) {
-      _config.headers['Authorization'] = 'bearer ' + window.sessionStorage.getItem('token')
-      // }
+      if (getToken()) {
+        _config.headers['Authorization'] = 'bearer ' + getToken()
+      }
     } catch (e) {
       console.error(e)
     }
@@ -45,46 +46,46 @@ service.interceptors.request.use(
 )
 
 // response interceptor
-service.interceptors.response.use((config) => {
-  return config
-}, (error) => {
-  if (error.response) {
-    const errorMessage = error.response.data === null ? '系统内部异常，请联系网站管理员' : error.response.data.message
-    switch (error.response.status) {
-      case 404:
-        Message({
-          message: '很抱歉，资源未找到' || 'Error',
-          type: 'error',
-          duration: 5 * 1000
-        })
-        break
-      case 403:
-        Message({
-          message: '很抱歉，您暂无该操作权限' || 'Error',
-          type: 'error',
-          duration: 5 * 1000
-        })
-        break
-      case 401:
-        Message({
-          message: '很抱歉，认证已失效，请重新登录' || 'Error',
-          type: 'error',
-          duration: 5 * 1000
-        })
-        break
-      default:
-        if (errorMessage) {
-          Message({
-            message: errorMessage,
-            type: 'error',
-            duration: 5 * 1000
-          })
-        }
-        break
-    }
-  }
-  return Promise.reject(error)
-})
+// service.interceptors.response.use((config) => {
+//   return config
+// }, (error) => {
+//   if (error.response) {
+//     const errorMessage = error.response.data === null ? '系统内部异常，请联系网站管理员' : error.response.data.message
+//     switch (error.response.status) {
+//       case 404:
+//         Message({
+//           message: '很抱歉，资源未找到' || 'Error',
+//           type: 'error',
+//           duration: 5 * 1000
+//         })
+//         break
+//       case 403:
+//         Message({
+//           message: '很抱歉，您暂无该操作权限' || 'Error',
+//           type: 'error',
+//           duration: 5 * 1000
+//         })
+//         break
+//       case 401:
+//         Message({
+//           message: '很抱歉，认证已失效，请重新登录' || 'Error',
+//           type: 'error',
+//           duration: 5 * 1000
+//         })
+//         break
+//       default:
+//         if (errorMessage) {
+//           Message({
+//             message: errorMessage,
+//             type: 'error',
+//             duration: 5 * 1000
+//           })
+//         }
+//         break
+//     }
+//   }
+//   return Promise.reject(error)
+// })
 
 const request = {
   // refresh (url, params) {
@@ -99,7 +100,6 @@ const request = {
   //   })
   // },
   login (url, params) {
-    debugger
     params['grant_type'] = 'password'
     return service.post(url, params, {
       transformRequest: [(params) => {

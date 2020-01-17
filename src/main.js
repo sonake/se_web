@@ -5,6 +5,7 @@ import './plugins/element.js'
 import './assets/css/global.css'
 import './assets/iconfont/iconfont.css'
 import request from './util/request'
+import store from './store'
 
 Vue.prototype.$post = request.post
 Vue.prototype.$get = request.get
@@ -17,5 +18,6 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

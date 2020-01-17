@@ -8080,6 +8080,11 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.npm.taobao.org/vue-hot-reload-api/download/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
   integrity sha1-UylVzB6yCKPZkLOp+acFdGV+CPI=
 
+vue-i18n@^8.15.3:
+  version "8.15.3"
+  resolved "https://registry.npm.taobao.org/vue-i18n/download/vue-i18n-8.15.3.tgz#9f947802d9b734fcb92e2ce724da654f2f9fc0f4"
+  integrity sha1-n5R4Atm3NPy5LiznJNplTy+fwPQ=
+
 vue-loader@^15.7.2:
   version "15.8.3"
   resolved "https://registry.npm.taobao.org/vue-loader/download/vue-loader-15.8.3.tgz?cache=0&sync_timestamp=1576665323795&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-loader%2Fdownload%2Fvue-loader-15.8.3.tgz#857cb9e30eb5fc25e66db48dce7e4f768602a23c"
@@ -8121,6 +8126,11 @@ vue@^2.6.10:
   version "2.6.11"
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha1-dllNh31LEiNEBuhONSdcbVFBJcU=
+
+vuex@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.1.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuex%2Fdownload%2Fvuex-3.1.2.tgz#a2863f4005aa73f2587e55c3fadf3f01f69c7d4d"
+  integrity sha1-ooY/QAWqc/JYflXD+t8/AfacfU0=
 
 watchpack@^1.6.0:
   version "1.6.0"

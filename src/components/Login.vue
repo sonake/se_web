@@ -2,7 +2,7 @@
   <div class="login_container">
     <div class="login_box">
       <div class="avatar_box">
-        <img src="../assets/logo.jpg">
+        <img src="../assets/logo.png">
       </div>
       <div>
         <div class="login-info">
@@ -20,7 +20,7 @@
             <h3 class="title">
               欢迎登陆
             </h3>
-            <lang-select class="set-language"/>
+<!--            <lang-select class="set-language"/>-->
           </div>
           <!--账户-->
           <el-form-item prop="username">
@@ -94,13 +94,16 @@ export default {
       this.$refs.loginFormRef.validate(valid => {
         if (!valid) return
         this.$login('auth/oauth/token', this.loginForm).then(res => {
-          debugger
           if (res.status !== 200) return this.$msg.error('登陆失败！')
           this.$msg.success('登陆成功！')
           // 1.将登陆成功之后的token，保存到客户端的storage
-          window.sessionStorage.setItem('token', res.data.access_token)
-          // 2.通过编程式导航跳转至后台主页，路由地址是/home
-          this.$router.push('/home')
+          this.saveLoginData(res)
+          // 获取当前用户信息
+          this.$get('system/currentUser').then(r => {
+            this.$store.commit('account/setUser', r.data.userAuthentication.details.userAuthentication.principal)
+            // 2.通过编程式导航跳转至后台主页，路由地址是/home
+            this.$router.push('/home')
+          })
         })
       })
     },
@@ -119,6 +122,14 @@ export default {
         this.loginForm.key = this.randomId
         this.imageCode = res
       })
+    },
+    // 存储用户信息
+    saveLoginData(res) {
+      this.$store.commit('account/setAccessToken', res.data.access_token)
+      this.$store.commit('account/setRefreshToken', res.data.refresh_token)
+      const current = new Date()
+      const expireTime = current.setTime(current.getTime() + 1000 * res.data.expires_in)
+      this.$store.commit('account/setExpireTime', expireTime)
     }
   }
 }
