@@ -24,13 +24,13 @@
       <!--            <el-option label="区域二" value="beijing"></el-option>-->
       <!--          </el-select>-->
       <!--        </el-form-item>-->
-      <el-form-item label="创建时间" required>
+      <!-- <el-form-item label="创建时间" required>
         <el-col :span="11">
           <el-form-item prop="createTime">
             <el-date-picker type="datetime" placeholder="选择创建时间" v-model="editForm.createTime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否禁用" prop="status">
         <el-switch
           v-model="editForm.status"
@@ -79,7 +79,6 @@ export default {
         password: '123456',
         nickname: 'test',
         email: '1@qq.cc',
-        createTime: '',
         status: '1',
         sex: '2',
         id: ''
@@ -96,9 +95,9 @@ export default {
         email: [
           { validator: checkEmail, trigger: 'blur' }
         ],
-        createTime: [
-          { type: 'date', required: true, message: '请选择创建时间', trigger: 'change' }
-        ],
+        // createTime: [
+        //   { type: 'date', required: true, message: '请选择创建时间', trigger: 'change' }
+        // ],
         status: [
           { required: true, message: '请选择活动禁用状态', trigger: 'change' }
         ]
@@ -107,15 +106,12 @@ export default {
   },
   watch: {
     editDialogVisible(newVal, oldVal) {
-      debugger
       this.dialogFormVisible = newVal
     }
   },
   methods: {
     // 查询需要修改的原始数据
     setFormValues(user) {
-      debugger
-      console.log(user)
       // 表单数据
       let fields = []
       Object.keys(this.editForm).forEach((key) => {
@@ -136,7 +132,7 @@ export default {
             console.log(res)
             if (res.status !== 200) {
               this.$emit('close')
-              return this.$msg.error('新增用户失败!')
+              return this.$msg.error('修改用户失败!')
             }
             this.$emit('success')
           })
@@ -149,8 +145,7 @@ export default {
       this.$refs.editFormRef.resetFields()
     },
     dialogClose() {
-      debugger
-      this.$emit('update:editDialogVisible', false)
+      this.$emit('close')
     }
   }
 }

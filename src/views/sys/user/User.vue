@@ -15,7 +15,10 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="handleAdd">添加用户</el-button>
+          <el-button type="primary" @click="handleAdd">新增</el-button>
+          <el-button
+            type="danger"
+            @click="handleDelete()" >删除</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -50,10 +53,10 @@
               type="primary"
               @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"></el-button>
             <!--删除-->
-            <el-button
+            <!-- <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete"></el-button>
+            @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete"></el-button> -->
             <!--分配角色-->
             <el-tooltip effect="dark" content="分配角色" placement="top-end" :enterable="false">
               <el-button
@@ -76,13 +79,13 @@
     </el-card>
     <!--用户添加-->
     <user-add
-      :addDialogVisible="userAdd.visible"
+      :addDialogVisible="userAddVisible"
       @close="handleUserAddClose"
       @success="handleUserAddSuccess">
     </user-add>
     <user-edit
       ref="userEdit"
-      :editDialogVisible="userEdit.visible"
+      :editDialogVisible="userEditVisible"
       @close="handleUserEditClose"
       @success="handleUserEditSuccess">
     </user-edit>
@@ -105,14 +108,11 @@ export default {
       },
       tableData: [],
       multipleSelection: [],
+      ids: '',
       // 新增模态框是否显示
-      userAdd: {
-        visible: false
-      },
+      userAddVisible: false,
       // 修改模态框是否显示
-      userEdit: {
-        visible: false
-      }
+      userEditVisible: false
     }
   },
   mounted () {
@@ -130,8 +130,13 @@ export default {
     },
     // 多选
     handleSelectionChange(val) {
+      this.ids = ''
       console.log(val)
       this.multipleSelection = val
+      for (let i = 0; i < this.multipleSelection.length; i++) {
+        this.ids += this.multipleSelection[i].id + ','
+      }
+      console.log(this.ids)
     },
     // 当前页显示的数据量
     handleSizeChange(val) {
@@ -145,32 +150,35 @@ export default {
     },
     // 新增用户
     handleAdd () {
-      this.userAdd.visible = true
+      this.userAddVisible = true
     },
     handleUserAddClose () {
-      debugger
-      this.userAdd.visiable = false
+      this.userAddVisible = false
     },
-    handleUserAddSuccess () {
-      this.userAdd.visible = false
-      this.$msg.success('新增用户成功，初始密码为123456')
+    handleUserAddSuccess (val) {
+      this.userAddVisible = false
+      this.$msg.success('新增用户成功，初始密码为' + val)
       this.getUserList()
     },
     // 修改用户信息
     handleEdit(index, row) {
       console.log(index, row)
-      this.userEdit.visible = true
+      this.userEditVisible = true
       this.$refs.userEdit.setFormValues(row)
     },
     handleUserEditClose() {
-      this.userEdit.visible = false
+      this.userEditVisible = false
     },
     handleUserEditSuccess() {
-      this.userEdit.visiable = false
+      this.userEditVisible = false
       this.$msg.success('修改用户成功')
       this.getUserList()
     },
-    handleDelete(index, row) {
+    handleDelete() {
+      debugger
+      if (this.ids === '' || this.ids === undefined) {
+        return this.$msg('请选择要删除的数据')
+      }
       let that = this
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -178,17 +186,18 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-      that.$delete('/system/user?userIds=' + row.id).then(res => {
-      if (res.status !== 200) return this.$msg.error('删除用户失败!')
-      that.$msg.success('删除用户成功！')
-      that.getUserList()
-      })
+        that.$delete('/system/user?userIds=' + this.ids).then(res => {
+          if (res.status !== 200) return this.$msg.error('删除用户失败!')
+          that.$msg.success('删除用户成功！')
+          this.ids = ''
+          that.getUserList()
+        })
       }).catch(() => {
         that.$message({
-        type: 'info',
-        message: '已取消删除'
+          type: 'info',
+          message: '已取消删除'
+        })
       })
-    })
     },
     // 修改用户禁用状态
     ChangeState (val) {

@@ -24,13 +24,13 @@
       <!--            <el-option label="区域二" value="beijing"></el-option>-->
       <!--          </el-select>-->
       <!--        </el-form-item>-->
-      <el-form-item label="创建时间" required>
+      <!-- <el-form-item label="创建时间" required>
         <el-col :span="11">
           <el-form-item prop="createTime">
             <el-date-picker type="datetime" placeholder="选择创建时间" v-model="addForm.createTime" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否禁用" prop="status">
         <el-switch
           v-model="addForm.status"
@@ -75,10 +75,9 @@ export default {
     return {
       addForm: {
         username: 'test123',
-        password: '123456',
+        password: '123456sss',
         nickname: 'test',
         email: '1@qq.cc',
-        createTime: '',
         status: '1',
         sex: '2'
       },
@@ -94,9 +93,9 @@ export default {
         email: [
           { validator: checkEmail, trigger: 'blur' }
         ],
-        createTime: [
-          { type: 'date', required: true, message: '请选择创建时间', trigger: 'change' }
-        ],
+        // createTime: [
+        //   { type: 'date', required: true, message: '请选择创建时间', trigger: 'change' }
+        // ],
         status: [
           { required: true, message: '请选择活动禁用状态', trigger: 'change' }
         ]
@@ -106,7 +105,6 @@ export default {
   },
   watch: {
     addDialogVisible(newVal, oldVal) {
-      debugger
       this.dialogFormVisible = newVal
     }
   },
@@ -116,12 +114,11 @@ export default {
       this.$refs.addFormRef.validate(valid => {
         if (valid) {
           this.$post('/system/user', this.addForm).then(res => {
-            debugger
             if (res.status !== 200) {
               that.$emit('close')
               return that.$msg.error('新增用户失败!')
             }
-            that.$emit('success')
+            that.$emit('success', this.addForm.password)
             that.resetForm()
           })
         } else {
@@ -133,7 +130,6 @@ export default {
       this.$refs.addFormRef.resetFields()
     },
     dialogClose() {
-      debugger
       this.$emit('close')
     }
   }
