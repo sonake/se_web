@@ -6,3 +6,24 @@ body,
     margin: 0;
     padding: 0;
 }
+.el-breadcrumb{
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+.el-card{
+    box-shadow: 0 1px 1px rgba(0,0,0,0.15) !important;
+}
+.el-table{
+    margin-top: 2%;
+    font-size: 12px;
+}
+.el-pagination{
+    margin-top: 1.5%;
+}
+.el-table th.gutter{
+    display: table-cell!important;
+}
+
+.el-table colgroup.gutter{
+    display: table-cell!important;
+}

@@ -8,12 +8,13 @@ export default {
     expireTime: db.get('EXPIRE_TIME', 0),
     user: db.get('USER'),
     permissions: db.get('PERMISSIONS'),
-    routes: db.get('USER_ROUTER') || []
+    routes: db.get('USER_ROUTER') || [],
+    activePath: db.get('ACTIVEPATH')
   },
   mutations: {
     setAccessToken(state, val) {
       db.save('ACCESS_TOKEN', val)
-      state.token = val
+      state.accessToken = val
     },
     setRefreshToken(state, val) {
       db.save('REFRESH_TOKEN', val)
@@ -34,6 +35,10 @@ export default {
     setRoutes(state, val) {
       db.save('USER_ROUTER', val)
       state.routes = val
+    },
+    setActivePath(state, val) {
+      db.save('ACTIVEPATH', val)
+      state.activePath = val
     }
   }
 }

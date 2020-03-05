@@ -1,28 +1,6 @@
 import Vue from 'vue'
-import {
-  Button,
-  FormItem,
-  Form,
-  Input,
-  Message,
-  Header,
-  Container,
-  Aside,
-  Main,
-  Menu,
-  Submenu,
-  MenuItem
-} from 'element-ui'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
-Vue.use(Button)
-Vue.use(Form)
-Vue.use(FormItem)
-Vue.use(Input)
-Vue.use(Header)
-Vue.use(Container)
-Vue.use(Main)
-Vue.use(Aside)
-Vue.use(Menu)
-Vue.use(Submenu)
-Vue.use(MenuItem)
-Vue.prototype.$msg = Message
+Vue.use(ElementUI)
+Vue.prototype.$msg = ElementUI.Message
