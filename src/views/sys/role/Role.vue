@@ -4,14 +4,14 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>系统管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>角色管理</el-breadcrumb-item>
     </el-breadcrumb>
     <!--卡片区域-->
     <el-card class="box-card">
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-input placeholder="请输入用户名" v-model="userInfo.username">
-            <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
+          <el-input placeholder="请输入角色名" v-model="roleInfo.roleName">
+            <el-button slot="append" icon="el-icon-search" @click="getRoleList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -28,11 +28,7 @@
         border
         stripe>
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="username" label="用户名"></el-table-column>
-        <el-table-column prop="nickname" label="昵称"></el-table-column>
-        <el-table-column prop="deptName" label="部门"></el-table-column>
-<!--        <el-table-column prop="email" label="邮箱"></el-table-column>-->
-        <el-table-column prop="roleName" label="角色"></el-table-column>
+        <el-table-column prop="roleName" label="角色名"></el-table-column>
         <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
             <el-switch
@@ -70,73 +66,61 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="userInfo.pageNo"
+        :current-page="roleInfo.pageNo"
         :page-sizes="[10, 20, 50, 100]"
         :page-size="1"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="userInfo.total">
+        :total="roleInfo.total">
       </el-pagination>
     </el-card>
     <!--用户添加-->
-    <user-add
-      :addDialogVisible="userAddVisible"
-      @close="handleUserAddClose"
-      @success="handleUserAddSuccess">
-    </user-add>
-    <user-edit
-      ref="userEdit"
-      :editDialogVisible="userEditVisible"
-      @close="handleUserEditClose"
-      @success="handleUserEditSuccess">
-    </user-edit>
+    <role-add
+      :addDialogVisible="roleAddVisible"
+      @close="handleRoleAddClose"
+      @success="handleRoleAddSuccess">
+    </role-add>
+    <role-edit
+      ref="roleEdit"
+      :editDialogVisible="roleEditVisible"
+      @close="handleRoleEditClose"
+      @success="handleRoleEditSuccess">
+    </role-edit>
   </div>
 </template>
 
 <script>
-import UserAdd from './UserAdd'
-import UserEdit from './UserEdit'
+import RoleAdd from './RoleAdd'
+import RoleEdit from './RoleEdit'
 export default {
-  components: { UserEdit, UserAdd },
+  components: { RoleAdd, RoleEdit },
   data() {
     return {
       // 查询参数
-      userInfo: {
-        username: '',
+      roleInfo: {
+        roleName: '',
         pageNo: 1,
         pageSize: 10,
         total: 0
       },
-      roleInfo: {
-        roleName: ''
-      },
       tableData: [],
       multipleSelection: [],
-      roleData: [],
       ids: '',
       // 新增模态框是否显示
-      userAddVisible: false,
+      roleAddVisible: false,
       // 修改模态框是否显示
-      userEditVisible: false
+      roleEditVisible: false
     }
   },
   mounted () {
-    this.getUserList()
+    this.getRoleList()
   },
 
   methods: {
-    // 获取角色列表
+    // 获取用户列表
     getRoleList() {
       this.$get('/system/role', this.roleInfo).then(res => {
-        debugger
         if (res.data.code !== 200) return this.$$msg.error('获取角色列表失败！')
-        this.roleData = res.data.data.list
-      })
-    },
-    // 获取用户列表
-    getUserList() {
-      this.$get('/system/user', this.userInfo).then(res => {
-        if (res.data.code !== 200) return this.$$msg.error('获取用户列表失败！')
-        this.userInfo.total = res.data.data.total
+        this.roleInfo.total = res.data.data.total
         this.tableData = res.data.data.list
       })
     },
@@ -153,56 +137,55 @@ export default {
     // 当前页显示的数据量
     handleSizeChange(val) {
       this.userInfo.pageSize = val
-      this.getUserList()
+      this.getRoleList()
     },
     // 页数改变发起请求
     handleCurrentChange(val) {
       this.userInfo.pageNo = val
-      this.getUserList()
-    },
-    // 新增用户
-    handleAdd () {
       this.getRoleList()
-      this.userAddVisible = true
     },
-    handleUserAddClose () {
-      this.userAddVisible = false
+    // 新增角色
+    handleAdd () {
+      this.roleAddVisible = true
     },
-    handleUserAddSuccess (val) {
-      this.userAddVisible = false
-      this.$msg.success('新增用户成功，初始密码为' + val)
+    handleRoleAddClose () {
+      this.roleAddVisible = false
+    },
+    handleRoleAddSuccess (val) {
+      this.roleAddVisible = false
+      this.$msg.success('修改角色成功!')
       this.getUserList()
     },
-    // 修改用户信息
+    // 修改角色信息
     handleEdit(index, row) {
       console.log(index, row)
-      this.userEditVisible = true
-      this.$refs.userEdit.setFormValues(row)
+      this.roleEditVisible = true
+      this.$refs.roleEdit.setFormValues(row)
     },
-    handleUserEditClose() {
-      this.userEditVisible = false
+    handleRoleEditClose() {
+      this.roleEditVisible = false
     },
-    handleUserEditSuccess() {
-      this.userEditVisible = false
-      this.$msg.success('修改用户成功')
-      this.getUserList()
+    handleRoleEditSuccess() {
+      this.roleEditVisible = false
+      this.$msg.success('修改角色成功')
+      this.getRoleList()
     },
     handleDelete() {
       if (this.ids === '' || this.ids === undefined) {
         return this.$msg('请选择要删除的数据')
       }
       let that = this
-      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
         center: true
       }).then(() => {
-        that.$delete('/system/user?userIds=' + this.ids).then(res => {
+        that.$delete('/system/role?roleIds=' + this.ids).then(res => {
           if (res.status !== 200) return this.$msg.error('删除用户失败!')
-          that.$msg.success('删除用户成功！')
+          that.$msg.success('删除角色成功！')
           this.ids = ''
-          that.getUserList()
+          that.getRoleList()
         })
       }).catch(() => {
         that.$message({
@@ -211,20 +194,18 @@ export default {
         })
       })
     },
-    // 修改用户禁用状态
+    // 修改角色禁用状态
     ChangeState (val) {
-      this.$put('/system/user', {
+      this.$put('/system/role', {
         id: val.id,
-        status: val.status,
-        sex: val.sex,
-        roleId: val.roleId
+        status: val.status
       }).then(res => {
         if (res.status !== 200) {
           // 修改失败保持原状态
           val.status = !val.status
-          return this.$msg.error('更新用户状态失败！')
+          return this.$msg.error('更新角色状态失败！')
         }
-        this.$msg.success('更新用户状态成功!')
+        this.$msg.success('更新角色状态成功!')
       })
     }
   }

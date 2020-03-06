@@ -18,12 +18,16 @@
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="addForm.email"></el-input>
       </el-form-item>
-      <!--        <el-form-item label="活动区域" prop="region">-->
-      <!--          <el-select v-model="addForm.region" placeholder="请选择活动区域">-->
-      <!--            <el-option label="区域一" value="shanghai"></el-option>-->
-      <!--            <el-option label="区域二" value="beijing"></el-option>-->
-      <!--          </el-select>-->
-      <!--        </el-form-item>-->
+      <el-form-item label="活动区域" prop="roleId">
+        <el-select v-model="addForm.roleId" multiple placeholder="请选择角色">
+          <el-option
+            v-for="item in roleData"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <!-- <el-form-item label="创建时间" required>
         <el-col :span="11">
           <el-form-item prop="createTime">
@@ -56,6 +60,7 @@
   </el-dialog>
 </template>
 <script>
+import { RandomNumBoth } from '../../../util'
 export default {
   name: 'UserAdd',
   props: {
@@ -74,12 +79,13 @@ export default {
     }
     return {
       addForm: {
-        username: 'test123',
-        password: '123456sss',
-        nickname: 'test',
+        username: 'test' + RandomNumBoth(1, 100),
+        password: '1234qwer',
+        nickname: '',
         email: '1@qq.cc',
         status: '1',
-        sex: '2'
+        sex: '2',
+        roleId: ''
       },
       addRules: {
         username: [
@@ -93,14 +99,18 @@ export default {
         email: [
           { validator: checkEmail, trigger: 'blur' }
         ],
-        // createTime: [
-        //   { type: 'date', required: true, message: '请选择创建时间', trigger: 'change' }
-        // ],
+        roleId: [
+          { required: true, message: '请选择角色', trigger: 'change' }
+        ],
         status: [
           { required: true, message: '请选择活动禁用状态', trigger: 'change' }
         ]
       },
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      roleData: [],
+      roleInfo: {
+        roleName: ''
+      }
     }
   },
   watch: {
@@ -108,7 +118,18 @@ export default {
       this.dialogFormVisible = newVal
     }
   },
+  mounted() {
+    this.getRoleList()
+  },
   methods: {
+    // 获取角色列表
+    getRoleList() {
+      this.$get('/system/role', this.roleInfo).then(res => {
+        debugger
+        if (res.data.code !== 200) return this.$msg.error('获取角色列表失败！')
+        this.roleData = res.data.data.list
+      })
+    },
     handleSubmit() {
       let that = this
       this.$refs.addFormRef.validate(valid => {

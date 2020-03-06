@@ -61,7 +61,7 @@
 </template>
 <script>
 export default {
-  name: 'UserEdit',
+  name: 'MenuEdit',
   props: {
     editDialogVisible: {
       default: false

@@ -4,14 +4,14 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>系统管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
     </el-breadcrumb>
     <!--卡片区域-->
     <el-card class="box-card">
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-input placeholder="请输入用户名" v-model="userInfo.username">
-            <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
+          <el-input placeholder="请输入菜单名" v-model="menuInfo.menuName">
+            <el-button slot="append" icon="el-icon-search" @click="getMenuList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -28,23 +28,9 @@
         border
         stripe>
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="username" label="用户名"></el-table-column>
-        <el-table-column prop="nickname" label="昵称"></el-table-column>
-        <el-table-column prop="deptName" label="部门"></el-table-column>
-<!--        <el-table-column prop="email" label="邮箱"></el-table-column>-->
-        <el-table-column prop="roleName" label="角色"></el-table-column>
-        <el-table-column prop="status" label="状态">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.status"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              active-value="1"
-              inactive-value="0"
-              @change="ChangeState(scope.row)">
-            </el-switch>
-          </template>
-        </el-table-column>
+        <el-table-column prop="menuName" label="菜单名"></el-table-column>
+        <el-table-column prop="icon" label="图标"></el-table-column>
+        <el-table-column prop="path" label="路由"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <!--修改-->
@@ -70,73 +56,61 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="userInfo.pageNo"
+        :current-page="menuInfo.pageNo"
         :page-sizes="[10, 20, 50, 100]"
         :page-size="1"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="userInfo.total">
+        :total="menuInfo.total">
       </el-pagination>
     </el-card>
-    <!--用户添加-->
-    <user-add
-      :addDialogVisible="userAddVisible"
-      @close="handleUserAddClose"
-      @success="handleUserAddSuccess">
-    </user-add>
-    <user-edit
+    <!--菜单添加-->
+    <menu-add
+      :addDialogVisible="menuAddVisible"
+      @close="handleMenuAddClose"
+      @success="handleMenuAddSuccess">
+    </menu-add>
+    <menu-edit
       ref="userEdit"
-      :editDialogVisible="userEditVisible"
-      @close="handleUserEditClose"
-      @success="handleUserEditSuccess">
-    </user-edit>
+      :editDialogVisible="menuEditVisible"
+      @close="handleMenuEditClose"
+      @success="handleMenuEditSuccess">
+    </menu-edit>
   </div>
 </template>
 
 <script>
-import UserAdd from './UserAdd'
-import UserEdit from './UserEdit'
+import MenuAdd from './MenuAdd'
+import MenuEdit from './MenuEdit'
 export default {
-  components: { UserEdit, UserAdd },
+  components: { MenuAdd, MenuEdit },
   data() {
     return {
       // 查询参数
-      userInfo: {
-        username: '',
+      menuInfo: {
+        roleName: '',
         pageNo: 1,
         pageSize: 10,
         total: 0
       },
-      roleInfo: {
-        roleName: ''
-      },
       tableData: [],
       multipleSelection: [],
-      roleData: [],
       ids: '',
       // 新增模态框是否显示
-      userAddVisible: false,
+      menuAddVisible: false,
       // 修改模态框是否显示
-      userEditVisible: false
+      menuEditVisible: false
     }
   },
   mounted () {
-    this.getUserList()
+    this.getMenuList()
   },
 
   methods: {
-    // 获取角色列表
-    getRoleList() {
-      this.$get('/system/role', this.roleInfo).then(res => {
-        debugger
-        if (res.data.code !== 200) return this.$$msg.error('获取角色列表失败！')
-        this.roleData = res.data.data.list
-      })
-    },
-    // 获取用户列表
-    getUserList() {
-      this.$get('/system/user', this.userInfo).then(res => {
-        if (res.data.code !== 200) return this.$$msg.error('获取用户列表失败！')
-        this.userInfo.total = res.data.data.total
+    // 获取菜单列表
+    getMenuList() {
+      this.$get('/system/menu', this.menuInfo).then(res => {
+        if (res.data.code !== 200) return this.$$msg.error('获取菜单列表失败！')
+        this.menuInfo.total = res.data.data.total
         this.tableData = res.data.data.list
       })
     },
@@ -152,40 +126,39 @@ export default {
     },
     // 当前页显示的数据量
     handleSizeChange(val) {
-      this.userInfo.pageSize = val
-      this.getUserList()
+      this.menuInfo.pageSize = val
+      this.getMenuList()
     },
     // 页数改变发起请求
     handleCurrentChange(val) {
-      this.userInfo.pageNo = val
-      this.getUserList()
+      this.menuInfo.pageNo = val
+      this.getMenuList()
     },
-    // 新增用户
+    // 新增菜单
     handleAdd () {
-      this.getRoleList()
-      this.userAddVisible = true
+      this.menuAddVisible = true
     },
-    handleUserAddClose () {
-      this.userAddVisible = false
+    handleMenuAddClose () {
+      this.menuAddVisible = false
     },
-    handleUserAddSuccess (val) {
-      this.userAddVisible = false
-      this.$msg.success('新增用户成功，初始密码为' + val)
-      this.getUserList()
+    handleMenuAddSuccess () {
+      this.menuAddVisible = false
+      this.$msg.success('新增菜单成功！')
+      this.getMenuList()
     },
     // 修改用户信息
     handleEdit(index, row) {
       console.log(index, row)
-      this.userEditVisible = true
-      this.$refs.userEdit.setFormValues(row)
+      this.menuEditVisible = true
+      this.$refs.menuEdit.setFormValues(row)
     },
-    handleUserEditClose() {
-      this.userEditVisible = false
+    handleMenuEditClose() {
+      this.menuEditVisible = false
     },
-    handleUserEditSuccess() {
-      this.userEditVisible = false
-      this.$msg.success('修改用户成功')
-      this.getUserList()
+    handleMenuEditSuccess() {
+      this.menuEditVisible = false
+      this.$msg.success('修改菜单成功')
+      this.getMenuList()
     },
     handleDelete() {
       if (this.ids === '' || this.ids === undefined) {
@@ -199,10 +172,10 @@ export default {
         center: true
       }).then(() => {
         that.$delete('/system/user?userIds=' + this.ids).then(res => {
-          if (res.status !== 200) return this.$msg.error('删除用户失败!')
-          that.$msg.success('删除用户成功！')
+          if (res.status !== 200) return this.$msg.error('删除菜单失败!')
+          that.$msg.success('删除菜单成功！')
           this.ids = ''
-          that.getUserList()
+          that.getMenuList()
         })
       }).catch(() => {
         that.$message({
@@ -211,9 +184,9 @@ export default {
         })
       })
     },
-    // 修改用户禁用状态
+    // 修改菜单禁用状态
     ChangeState (val) {
-      this.$put('/system/user', {
+      this.$put('/system/menu', {
         id: val.id,
         status: val.status,
         sex: val.sex,
@@ -222,9 +195,9 @@ export default {
         if (res.status !== 200) {
           // 修改失败保持原状态
           val.status = !val.status
-          return this.$msg.error('更新用户状态失败！')
+          return this.$msg.error('更新菜单状态失败！')
         }
-        this.$msg.success('更新用户状态成功!')
+        this.$msg.success('更新菜单状态成功!')
       })
     }
   }

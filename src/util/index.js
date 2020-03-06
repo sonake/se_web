@@ -359,6 +359,14 @@ export function getFileType (filename) {
     return ''
   }
 }
+// min ≤ r ≤ max返回指定返回内的随机数
+export function RandomNumBoth (Min, Max) {
+  let Range = Max - Min
+  let Rand = Math.random()
+  // 四舍五入
+  let num = Min + Math.round(Rand * Range)
+  return num
+}
 
 export function randomNum (len, radix) {
   const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('')

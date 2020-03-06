@@ -5,6 +5,8 @@ import Home from '../components/Home'
 import { getToken } from '../util/auth'
 import Welcome from '../components/Welcome'
 import User from '../views/sys/user/User'
+import Role from '@/views/sys/role/Role'
+import Menu from '@/views/sys/menu/Menu'
 
 Vue.use(VueRouter)
 
@@ -31,6 +33,14 @@ const routes = [
       {
         path: '/sys/user',
         component: User
+      },
+      {
+        path: '/sys/role',
+        component: Role
+      },
+      {
+        path: '/sys/menu',
+        component: Menu
       }
     ]
   }
