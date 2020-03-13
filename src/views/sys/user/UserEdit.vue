@@ -100,9 +100,9 @@ export default {
         email: [
           { validator: checkEmail, trigger: 'blur' }
         ],
-        roleId: [
-          { required: true, message: '请选择角色', trigger: 'change' }
-        ],
+        // roleId: [
+        //   { required: true, message: '请选择角色', trigger: 'change' }
+        // ],
         status: [
           { required: true, message: '请选择活动禁用状态', trigger: 'change' }
         ]

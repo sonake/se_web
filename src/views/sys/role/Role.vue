@@ -54,7 +54,7 @@
             type="danger"
             @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete"></el-button> -->
             <!--分配角色-->
-            <el-tooltip effect="dark" content="分配角色" placement="top-end" :enterable="false">
+            <el-tooltip effect="dark" content="分配权限" placement="top-end" :enterable="false">
               <el-button
                 size="mini"
                 type="warning"
@@ -73,7 +73,7 @@
         :total="roleInfo.total">
       </el-pagination>
     </el-card>
-    <!--用户添加-->
+    <!--角色添加-->
     <role-add
       :addDialogVisible="roleAddVisible"
       @close="handleRoleAddClose"
@@ -153,8 +153,8 @@ export default {
     },
     handleRoleAddSuccess (val) {
       this.roleAddVisible = false
-      this.$msg.success('修改角色成功!')
-      this.getUserList()
+      this.$msg.success('新增角色成功!')
+      this.getRoleList()
     },
     // 修改角色信息
     handleEdit(index, row) {

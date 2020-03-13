@@ -18,7 +18,7 @@
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="addForm.email"></el-input>
       </el-form-item>
-      <el-form-item label="活动区域" prop="roleId">
+      <el-form-item label="角色" prop="roleId">
         <el-select v-model="addForm.roleId" multiple placeholder="请选择角色">
           <el-option
             v-for="item in roleData"
@@ -28,13 +28,6 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="创建时间" required>
-        <el-col :span="11">
-          <el-form-item prop="createTime">
-            <el-date-picker type="datetime" placeholder="选择创建时间" v-model="addForm.createTime" style="width: 100%;"></el-date-picker>
-          </el-form-item>
-        </el-col>
-      </el-form-item> -->
       <el-form-item label="是否禁用" prop="status">
         <el-switch
           v-model="addForm.status"
@@ -85,7 +78,7 @@ export default {
         email: '1@qq.cc',
         status: '1',
         sex: '2',
-        roleId: ''
+        roleId: '1'
       },
       addRules: {
         username: [
@@ -99,9 +92,9 @@ export default {
         email: [
           { validator: checkEmail, trigger: 'blur' }
         ],
-        roleId: [
-          { required: true, message: '请选择角色', trigger: 'change' }
-        ],
+        // roleId: [
+        //   { required: true, message: '请选择角色', trigger: 'change' }
+        // ],
         status: [
           { required: true, message: '请选择活动禁用状态', trigger: 'change' }
         ]

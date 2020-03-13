@@ -1,7 +1,8 @@
 <template>
-  <el-dialog
+  <el-drawer
     title="修改角色"
     @close="dialogClose"
+    :direction="direction"
     :visible.sync="dialogFormVisible"
     width="40%">
     <!--内容主体区域-->
@@ -18,13 +19,21 @@
           inactive-value="0">
         </el-switch>
       </el-form-item>
+      <el-form-item label="权限" prop="menuIds">
+        <el-tree
+          ref="roleTree"
+          :data="menus"
+          show-checkbox
+          @check-change="handleCheckChange">
+        </el-tree>
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
     <el-button @click="resetForm">重置</el-button>
 <!--    <el-button type="info" @click="addDialogVisible = false">取 消</el-button>-->
     <el-button type="primary" @click="handleSubmit">确 定</el-button>
   </span>
-  </el-dialog>
+  </el-drawer>
 </template>
 <script>
 export default {
@@ -36,6 +45,7 @@ export default {
   },
   data () {
     return {
+      direction: 'rtl',
       dialogFormVisible: false,
       editForm: {
         roleName: '',

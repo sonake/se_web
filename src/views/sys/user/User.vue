@@ -128,14 +128,14 @@ export default {
     getRoleList() {
       this.$get('/system/role', this.roleInfo).then(res => {
         debugger
-        if (res.data.code !== 200) return this.$$msg.error('获取角色列表失败！')
+        if (res.data.code !== 200) return this.$msg.error('获取角色列表失败！')
         this.roleData = res.data.data.list
       })
     },
     // 获取用户列表
     getUserList() {
       this.$get('/system/user', this.userInfo).then(res => {
-        if (res.data.code !== 200) return this.$$msg.error('获取用户列表失败！')
+        if (res.data.code !== 200) return this.$msg.error('获取用户列表失败！')
         this.userInfo.total = res.data.data.total
         this.tableData = res.data.data.list
       })
