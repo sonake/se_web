@@ -3,11 +3,11 @@
     <!--面包屑导航区域-->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+      <el-breadcrumb-item>系统管理</el-breadcrumb-item>
       <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
     </el-breadcrumb>
     <!--卡片区域-->
-    <el-card class="box-card">
+    <el-card>
       <el-row :gutter="20">
         <el-col :span="8">
           <el-input placeholder="请输入菜单名" v-model="menuInfo.menuName">
@@ -18,19 +18,42 @@
           <el-button type="primary" @click="handleAdd">新增</el-button>
           <el-button
             type="danger"
-            @click="handleDelete()" >删除</el-button>
+            @click="handleDelete()">删除
+          </el-button>
         </el-col>
       </el-row>
+      <div class="el-menu-table">
       <el-table
-        ref="multipleTable"
-        @selection-change="handleSelectionChange"
         :data="tableData"
+        style="width: 100%;margin-bottom: 20px;"
+        row-key="id"
         border
-        stripe>
+        @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="menuName" label="菜单名"></el-table-column>
-        <el-table-column prop="icon" label="图标"></el-table-column>
-        <el-table-column prop="path" label="路由"></el-table-column>
+        <el-table-column
+          prop="label"
+          label="菜单"
+          sortable
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="type"
+          label="类型"
+          sortable
+          width="180">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.type==='0'"
+              type="success"
+              disable-transitions>菜单</el-tag>
+            <el-tag v-else
+                    type="danger"
+                    disable-transitions>按钮</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="component"
+          label="路由">
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <!--修改-->
@@ -53,15 +76,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="menuInfo.pageNo"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="1"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="menuInfo.total">
-      </el-pagination>
+      </div>
     </el-card>
     <!--菜单添加-->
     <menu-add
@@ -70,7 +85,7 @@
       @success="handleMenuAddSuccess">
     </menu-add>
     <menu-edit
-      ref="userEdit"
+      ref="menuEdit"
       :editDialogVisible="menuEditVisible"
       @close="handleMenuEditClose"
       @success="handleMenuEditSuccess">
@@ -81,13 +96,14 @@
 <script>
 import MenuAdd from './MenuAdd'
 import MenuEdit from './MenuEdit'
+
 export default {
   components: { MenuAdd, MenuEdit },
   data() {
     return {
       // 查询参数
       menuInfo: {
-        roleName: '',
+        menuName: '',
         pageNo: 1,
         pageSize: 10,
         total: 0
@@ -101,15 +117,14 @@ export default {
       menuEditVisible: false
     }
   },
-  mounted () {
+  mounted() {
     this.getMenuList()
   },
-
   methods: {
     // 获取菜单列表
     getMenuList() {
       this.$get('/system/menu', this.menuInfo).then(res => {
-        if (res.data.code !== 200) return this.$$msg.error('获取菜单列表失败！')
+        if (res.data.code !== 200) return this.$msg.error('获取菜单列表失败！')
         this.menuInfo.total = res.data.data.total
         this.tableData = res.data.data.list
       })
@@ -117,12 +132,12 @@ export default {
     // 多选
     handleSelectionChange(val) {
       this.ids = ''
-      console.log(val)
+      // console.log(val)
       this.multipleSelection = val
       for (let i = 0; i < this.multipleSelection.length; i++) {
         this.ids += this.multipleSelection[i].id + ','
       }
-      console.log(this.ids)
+      // console.log(this.ids)
     },
     // 当前页显示的数据量
     handleSizeChange(val) {
@@ -135,20 +150,19 @@ export default {
       this.getMenuList()
     },
     // 新增菜单
-    handleAdd () {
+    handleAdd() {
       this.menuAddVisible = true
     },
-    handleMenuAddClose () {
+    handleMenuAddClose() {
       this.menuAddVisible = false
     },
-    handleMenuAddSuccess () {
+    handleMenuAddSuccess() {
       this.menuAddVisible = false
       this.$msg.success('新增菜单成功！')
       this.getMenuList()
     },
     // 修改用户信息
     handleEdit(index, row) {
-      console.log(index, row)
       this.menuEditVisible = true
       this.$refs.menuEdit.setFormValues(row)
     },
@@ -185,7 +199,7 @@ export default {
       })
     },
     // 修改菜单禁用状态
-    ChangeState (val) {
+    ChangeState(val) {
       this.$put('/system/menu', {
         id: val.id,
         status: val.status,
@@ -205,5 +219,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+  .el-menu-table{
+    height: 450px;
+    overflow: auto;
+  }
 </style>

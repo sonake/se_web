@@ -4,7 +4,13 @@
       <div >
         <img src='../assets/logo.png' alt='' :width="isCollapse ? '64px' : '200px'">
       </div>
-      <div class="toggle-button" @click="toggleCollapse">|||</div>
+      <div class="toggle-button" @click="toggleCollapse" style="margin-right:auto">
+        <i :class='icon' style="font-size: xx-large"></i>
+      </div>
+      <div style="color: #222222">{{opp}}</div>
+      <iframe id="geoPage" width=0 height=0 frameborder=0 style="display:none;" scrolling="no"
+              src="https://apis.map.qq.com/tools/geolocation?key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp">
+      </iframe>
       <el-button type='info' @click='logout'>退出</el-button>
     </el-header>
     <el-container>
@@ -52,9 +58,11 @@ export default {
   data () {
     // 左侧菜单数据
     return {
+      icon: 'el-icon-s-unfold',
       menuList: [ ],
       isCollapse: false,
-      activePath: '/home'
+      activePath: '/home',
+      opp: ''
     }
   },
   name: 'Home',
@@ -63,8 +71,17 @@ export default {
     // 获取权限菜单
     this.getMenuList()
     this.activePath = db.get('ACTIVEPATH')
+    this.Tmap()
   },
   methods: {
+    Tmap() {
+      window.addEventListener('message', function(event) {
+        let loc = event.data
+        this.opp = '您当前位于' + loc.city
+        // 显示你当前位置
+        // console.log(this.opp)
+      }, false)
+    },
     logout () {
       // 清空token
       db.clear()
@@ -85,6 +102,11 @@ export default {
     // 侧边栏切换
     toggleCollapse () {
       this.isCollapse = !this.isCollapse
+      if (this.isCollapse) {
+        this.icon = 'el-icon-s-fold'
+      } else {
+        this.icon = 'el-icon-s-unfold'
+      }
     },
     // 保存菜单的激活状态
     saveNavstate (activePath) {

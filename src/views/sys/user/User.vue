@@ -143,12 +143,12 @@ export default {
     // 多选
     handleSelectionChange(val) {
       this.ids = ''
-      console.log(val)
+      // console.log(val)
       this.multipleSelection = val
       for (let i = 0; i < this.multipleSelection.length; i++) {
         this.ids += this.multipleSelection[i].id + ','
       }
-      console.log(this.ids)
+      // console.log(this.ids)
     },
     // 当前页显示的数据量
     handleSizeChange(val) {
@@ -175,7 +175,7 @@ export default {
     },
     // 修改用户信息
     handleEdit(index, row) {
-      console.log(index, row)
+      // console.log(index, row)
       this.userEditVisible = true
       this.$refs.userEdit.setFormValues(row)
     },

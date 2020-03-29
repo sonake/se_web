@@ -24,21 +24,40 @@
           </div>
           <!--账户-->
           <el-form-item prop="username">
-            <el-input prefix-icon="iconfont icon-account" v-model="loginForm.username"></el-input>
+            <el-input
+              prefix-icon="iconfont icon-account"
+              v-model="loginForm.username"
+              @keyup.enter.native="login">
+            </el-input>
           </el-form-item>
           <!--密码-->
           <el-form-item prop="password">
-            <el-input type="password" prefix-icon="iconfont icon-password" v-model="loginForm.password"></el-input>
+            <el-input
+              type="password"
+              prefix-icon="iconfont icon-password"
+              v-model="loginForm.password"
+              @keyup.enter.native="login">
+            </el-input>
           </el-form-item>
           <!--验证码-->
           <el-form-item prop="code" class="code-input">
-            <el-input prefix-icon="iconfont icon-customization" v-model="loginForm.code" style="width: 60%"></el-input>
+            <el-input
+              prefix-icon="iconfont icon-customization"
+              v-model="loginForm.code"
+              style="width: 60%"
+              @keyup.enter.native="login">
+            </el-input>
             <img :src="imageCode" class="code-image" @click="getCodeImage">
           </el-form-item>
           <!--按钮区域-->
           <el-form-item class="login_button">
-            <el-button type="primary" @click="login">登陆</el-button>
+            <el-button type="primary" @click.native.prevent="login">登陆</el-button>
             <el-button type="info" @click="resetLoginForm">重置</el-button>
+          </el-form-item>
+          <el-divider content-position="center">社交登陆</el-divider>
+          <el-form-item>
+            <img src="../assets/img/github.png" @click="loginSocial">
+<!--            <a href="https://github.com/login/oauth/authorize?client_id=2d0ee0978235dbfa19cd&redirect_uri=http://127.0.0.1:9030/auth/social/callback&state=1">登陆</a>-->
           </el-form-item>
           <span class="login-footer">
             Copyright © 2019 <a target="_blank" href="https://sonake.com">Sonake</a>
@@ -86,12 +105,20 @@ export default {
     this.getCodeImage()
   },
   methods: {
+    loginSocial() {
+      axios.post('http://localhost:9030/auth/social/render').then(res => {
+        debugger
+        // console.log(res)
+      })
+    },
     // 点击重置按钮，重置表单数据
     resetLoginForm () {
+      debugger
       this.$refs.loginFormRef.resetFields()
     },
     login () {
       this.$refs.loginFormRef.validate(valid => {
+        debugger
         if (!valid) return
         this.$login('auth/oauth/token', this.loginForm).then(res => {
           if (res.status !== 200) return this.$msg.error('登陆失败！')

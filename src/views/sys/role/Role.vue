@@ -53,12 +53,12 @@
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete"></el-button> -->
-            <!--分配角色-->
-            <el-tooltip effect="dark" content="分配权限" placement="top-end" :enterable="false">
+            <!--查看权限-->
+            <el-tooltip effect="dark" content="查看权限" placement="top-end" :enterable="false">
               <el-button
                 size="mini"
                 type="warning"
-                @click="handleEdit(scope.$index, scope.row)" icon="el-icon-setting"></el-button>
+                @click="handleViewPerm(scope.$index, scope.row)" icon="el-icon-setting"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -73,6 +73,12 @@
         :total="roleInfo.total">
       </el-pagination>
     </el-card>
+    <!--查看权限-->
+    <Perms
+      ref="rolePerm"
+      :permDialogVisible="permVisible"
+      @close="handlePermClose">
+    </Perms>
     <!--角色添加-->
     <role-add
       :addDialogVisible="roleAddVisible"
@@ -91,8 +97,9 @@
 <script>
 import RoleAdd from './RoleAdd'
 import RoleEdit from './RoleEdit'
+import Perms from './Perms'
 export default {
-  components: { RoleAdd, RoleEdit },
+  components: { RoleAdd, RoleEdit, Perms },
   data() {
     return {
       // 查询参数
@@ -108,7 +115,10 @@ export default {
       // 新增模态框是否显示
       roleAddVisible: false,
       // 修改模态框是否显示
-      roleEditVisible: false
+      roleEditVisible: false,
+      // 权限查看
+      permVisible: false
+
     }
   },
   mounted () {
@@ -127,12 +137,12 @@ export default {
     // 多选
     handleSelectionChange(val) {
       this.ids = ''
-      console.log(val)
+      // console.log(val)
       this.multipleSelection = val
       for (let i = 0; i < this.multipleSelection.length; i++) {
         this.ids += this.multipleSelection[i].id + ','
       }
-      console.log(this.ids)
+      // console.log(this.ids)
     },
     // 当前页显示的数据量
     handleSizeChange(val) {
@@ -158,7 +168,7 @@ export default {
     },
     // 修改角色信息
     handleEdit(index, row) {
-      console.log(index, row)
+      // console.log(index, row)
       this.roleEditVisible = true
       this.$refs.roleEdit.setFormValues(row)
     },
@@ -169,6 +179,16 @@ export default {
       this.roleEditVisible = false
       this.$msg.success('修改角色成功')
       this.getRoleList()
+    },
+    // 查看权限
+    handleViewPerm(index, row) {
+      debugger
+      // console.log(index, row)
+      this.permVisible = true
+      this.$refs.rolePerm.setPermFormValues(row)
+    },
+    handlePermClose() {
+      this.permVisible = false
     },
     handleDelete() {
       if (this.ids === '' || this.ids === undefined) {

@@ -118,7 +118,6 @@ export default {
     // 获取角色列表
     getRoleList() {
       this.$get('/system/role', this.roleInfo).then(res => {
-        debugger
         if (res.data.code !== 200) return this.$msg.error('获取角色列表失败！')
         this.roleData = res.data.data.list
       })

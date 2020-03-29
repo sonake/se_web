@@ -13,7 +13,7 @@
         <el-input v-model="addForm.path"></el-input>
       </el-form-item>
       <el-form-item label="组件" prop="component">
-        <el-input v-model="addForm.component" show-password></el-input>
+        <el-input v-model="addForm.component"></el-input>
       </el-form-item>
       <el-form-item label="权限" prop="perms">
         <el-input v-model="addForm.perms"></el-input>
@@ -22,20 +22,22 @@
         <el-input v-model="addForm.icon"></el-input>
       </el-form-item>
       <el-form-item label="类型" prop="type">
-        <el-radio-group v-model="addForm.sex">
+        <el-radio-group v-model="addForm.type">
           <el-radio label="0">菜单</el-radio>
           <el-radio label="1">按钮</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="父菜单" prop="pId">
-        <el-select v-model="addForm.pId" multiple placeholder="请选择父级">
-          <el-option
-            v-for="item in roleData"
-            :key="item.id"
-            :label="item.roleName"
-            :value="item.id">
-          </el-option>
-        </el-select>
+      <el-form-item label="父菜单" prop="parentId">
+          <el-cascader
+            ref="ecPid"
+            v-model="addForm.parentId"
+            @change="getCurrentNode"
+            placeholder="请选择父级菜单"
+            :props="{checkStrictly: true, value: 'id'}"
+            :options="menuData"
+            clearable>
+          </el-cascader>
+<!--        </el-select>-->
       </el-form-item>
       <el-form-item label="排序" prop="orderNum">
         <el-input v-model="addForm.orderNum"></el-input>
@@ -50,7 +52,7 @@
 </template>
 <script>
 export default {
-  name: 'UserAdd',
+  name: 'MenuAdd',
   props: {
     addDialogVisible: {
       default: false
@@ -58,36 +60,25 @@ export default {
   },
   data () {
     return {
+      menuData: [],
       addForm: {
         menuName: '',
         path: '',
         component: '',
         perms: '',
         icon: '',
-        type: '0',
-        pId: 0,
+        type: '1',
+        parentId: '1',
         orderNum: ''
       },
       addRules: {
         menuName: [
           { required: true, message: '请输入菜单名', trigger: 'blur' },
-          { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
-        ],
-        path: [
-          { required: true, message: '请输入路由', trigger: 'blur' },
-          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
-        ],
-        component: [
-          { required: true, message: '请输入组件', trigger: 'blur' },
-          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
         perms: [
           { required: true, message: '请输入权限', trigger: 'blur' },
-          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
-        ],
-        icon: [
-          { required: true, message: '请输入图标', trigger: 'blur' },
-          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
+          { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }
         ]
       },
       menuInfo: {
@@ -103,15 +94,19 @@ export default {
     }
   },
   mounted() {
-    this.getRoleList()
+    this.getMenuList()
   },
   methods: {
+    getCurrentNode(val) {
+      let nodesObj = this.$refs['ecPid'].getCheckedNodes()
+      console.log(nodesObj[0].data.id)
+    },
     // 获取菜单列表
-    getRoleList() {
+    getMenuList() {
       this.$get('/system/menu', this.menuInfo).then(res => {
-        debugger
-        if (res.data.code !== 200) return this.$msg.error('获取菜单列表失败！')
-        this.roleData = res.data.data.list
+        if (res.data.code !== 200) return this.$msg.error('获取菜单失败！')
+        this.menuData = res.data.data.list
+        // console.log(this.menuData)
       })
     },
     handleSubmit() {
@@ -141,6 +136,6 @@ export default {
 }
 </script>
 
-<style lang="less" coped>
+<style lang="less" scoped>
 
 </style>

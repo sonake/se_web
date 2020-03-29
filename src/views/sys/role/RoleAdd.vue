@@ -22,14 +22,17 @@
       <el-form-item label="角色描述" prop="remarks">
         <el-input v-model="addForm.remarks"></el-input>
       </el-form-item>
+      <div class="el-role-tree">
       <el-form-item label="权限" prop="menuIds">
         <el-tree
           ref="roleTree"
           :data="menus"
           show-checkbox
+          :default-expand-all="true"
           @check-change="handleCheckChange">
         </el-tree>
       </el-form-item>
+      </div>
     </el-form>
     <el-card>
     <el-button @click="resetForm">重置</el-button>
@@ -81,7 +84,6 @@ export default {
         if (res.data.code !== 200) {
           return this.$msg(res.data.msg)
         }
-        console.dir(res.data.data.list)
         this.menus = res.data.data.list
       })
     },
@@ -115,7 +117,6 @@ export default {
       res.forEach((item) => {
         arr.push(item.id)
       })
-      console.log(arr)
       return arr
     }
   }
@@ -129,5 +130,9 @@ export default {
     /*padding-right: 0;*/
     width:100%;
     height:100px;
+  }
+  .el-role-tree{
+    height: 300px;
+    overflow: auto;
   }
 </style>

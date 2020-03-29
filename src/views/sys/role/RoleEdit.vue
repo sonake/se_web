@@ -19,20 +19,25 @@
           inactive-value="0">
         </el-switch>
       </el-form-item>
+      <div class="el-role-tree">
       <el-form-item label="权限" prop="menuIds">
         <el-tree
           ref="roleTree"
           :data="menus"
           show-checkbox
-          @check-change="handleCheckChange">
+          node-key="id"
+          @check-change="handleCheckChange"
+          :default-checked-keys="checkedArr"
+          :default-expand-all="true">
         </el-tree>
       </el-form-item>
+      </div>
     </el-form>
-    <span slot="footer" class="dialog-footer">
+    <el-card>
     <el-button @click="resetForm">重置</el-button>
 <!--    <el-button type="info" @click="addDialogVisible = false">取 消</el-button>-->
     <el-button type="primary" @click="handleSubmit">确 定</el-button>
-  </span>
+    </el-card>
   </el-drawer>
 </template>
 <script>
@@ -45,11 +50,16 @@ export default {
   },
   data () {
     return {
+      // 已经选中的权限id
+      checkedArr: [],
+      menus: [],
       direction: 'rtl',
       dialogFormVisible: false,
       editForm: {
+        id: '',
         roleName: '',
-        status: ''
+        status: '',
+        menuIds: []
       },
       editRules: {
         roleName: [
@@ -59,12 +69,24 @@ export default {
       }
     }
   },
+  mounted() {
+    this.initMenus()
+  },
   watch: {
     editDialogVisible(newVal, oldVal) {
       this.dialogFormVisible = newVal
     }
   },
   methods: {
+    // 获取权限树
+    initMenus() {
+      this.$get('/system/menu').then(res => {
+        if (res.data.code !== 200) {
+          return this.$msg(res.data.msg)
+        }
+        this.menus = res.data.data.list
+      })
+    },
     // 查询需要修改的原始数据
     setFormValues(role) {
       // 表单数据
@@ -72,19 +94,23 @@ export default {
       Object.keys(this.editForm).forEach((key) => {
         fields.push(key)
       })
-      console.log(fields)
       Object.keys(role).forEach((key) => {
         if (fields.indexOf(key) !== -1) {
           this.editForm[key] = role[key]
         }
       })
-      console.log(this.editForm)
+      this.checkedArr = []
+      // role.mids.split(',').forEach((item) => {
+      //   this.checkedArr.push(parseInt(item))
+      // })
+      this.checkedArr = role.mids.split(',').map(item => parseInt(item))
     },
     handleSubmit() {
+      this.editForm.menuIds = this.handleCheckChange()
       this.$refs.editFormRef.validate(valid => {
         if (valid) {
           this.$put('/system/role', this.editForm).then(res => {
-            console.log(res)
+            // console.log(res)
             if (res.status !== 200) {
               this.$emit('close')
               return this.$msg.error('修改用户失败!')
@@ -96,6 +122,14 @@ export default {
         }
       })
     },
+    handleCheckChange() {
+      let res = this.$refs.roleTree.getCheckedNodes()
+      let arr = []
+      res.forEach((item) => {
+        arr.push(item.id)
+      })
+      return arr
+    },
     resetForm() {
       this.$refs.editFormRef.resetFields()
     },
@@ -106,6 +140,17 @@ export default {
 }
 </script>
 
-<style lang="less" coped>
+<style lang="less" scoped>
+  .el-card{
+    position:absolute;
+    bottom:0;
+    /*padding-right: 0;*/
+    width:100%;
+    height:100px;
+  }
+  .el-role-tree{
+    height: 300px;
+    overflow: auto;
+  }
 
 </style>

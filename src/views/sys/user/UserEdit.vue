@@ -125,7 +125,6 @@ export default {
     // 获取角色列表
     getRoleList() {
       this.$get('/system/role', this.roleInfo).then(res => {
-        debugger
         if (res.data.code !== 200) return this.$msg.error('获取角色列表失败！')
         this.roleData = res.data.data.list
       })
@@ -137,19 +136,19 @@ export default {
       Object.keys(this.editForm).forEach((key) => {
         fields.push(key)
       })
-      console.log(fields)
+      // console.log(fields)
       Object.keys(user).forEach((key) => {
         if (fields.indexOf(key) !== -1) {
           this.editForm[key] = user[key]
         }
       })
-      console.log(this.editForm)
+      // console.log(this.editForm)
     },
     handleSubmit() {
       this.$refs.editFormRef.validate(valid => {
         if (valid) {
           this.$put('/system/user', this.editForm).then(res => {
-            console.log(res)
+            // console.log(res)
             if (res.status !== 200) {
               this.$emit('close')
               return this.$msg.error('修改用户失败!')
