@@ -7,10 +7,10 @@
       <div class="toggle-button" @click="toggleCollapse" style="margin-right:auto">
         <i :class='icon' style="font-size: xx-large"></i>
       </div>
-      <div style="color: #222222">{{opp}}</div>
-      <iframe id="geoPage" width=0 height=0 frameborder=0 style="display:none;" scrolling="no"
-              src="https://apis.map.qq.com/tools/geolocation?key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp">
-      </iframe>
+<!--      <div style="color: #222222">{{opp}}</div>-->
+<!--      <iframe id="geoPage" width=0 height=0 frameborder=0 style="display:none;" scrolling="no"-->
+<!--              src="https://apis.map.qq.com/tools/geolocation?key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp">-->
+<!--      </iframe>-->
       <el-button type='info' @click='logout'>退出</el-button>
     </el-header>
     <el-container>

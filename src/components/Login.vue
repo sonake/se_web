@@ -2,7 +2,7 @@
   <div class="login_container">
     <div class="login_box">
       <div class="avatar_box">
-        <img src="../assets/logo1.jpg">
+        <img src="../assets/logo.png">
       </div>
       <div>
         <div class="login-info">
@@ -17,9 +17,9 @@
         </div>
         <el-form ref="loginFormRef" label-width="0px" class="login_form" :model="loginForm" :rules="ruleForm">
           <div class="title-container">
-            <h3 class="title">
+            <h6 class="title">
               欢迎登陆
-            </h3>
+            </h6>
 <!--            <lang-select class="set-language"/>-->
           </div>
           <!--账户-->
@@ -54,10 +54,13 @@
             <el-button type="primary" @click.native.prevent="login">登陆</el-button>
             <el-button type="info" @click="resetLoginForm">重置</el-button>
           </el-form-item>
-          <el-divider content-position="center">社交登陆</el-divider>
           <el-form-item>
-            <img src="../assets/img/github.png" @click="loginSocial">
-<!--            <a href="https://github.com/login/oauth/authorize?client_id=2d0ee0978235dbfa19cd&redirect_uri=http://127.0.0.1:9030/auth/social/callback&state=1">登陆</a>-->
+            <el-divider content-position="center">社交登陆</el-divider>
+            <template v-for="(l, index) in logo">
+              <div :key="index" class="logo-wrapper">
+                 <img :src="resolveLogo(l.img)" alt="" :class="{ 'radius': l.radius }" @click="loginSocial">
+              </div>
+            </template>
           </el-form-item>
           <span class="login-footer">
             Copyright © 2019 <a target="_blank" href="https://sonake.com">Sonake</a>
@@ -98,18 +101,58 @@ export default {
         ]
       },
       randomId: randomNum(24, 16),
-      imageCode: ''
+      imageCode: '',
+      page: {
+        width: window.screen.width * 0.5,
+        height: window.screen.height * 0.5
+      },
+      logo: [
+        { img: 'github.png', name: 'github', radius: true },
+        { img: 'gitee.png', name: 'gitee', radius: true },
+        { img: 'tencent_cloud.png', name: 'tencent_cloud', radius: true },
+        { img: 'qq.png', name: 'qq', radius: true },
+        { img: 'dingtalk.png', name: 'dingtalk', radius: true }
+        // { img: 'microsoft.png', name: 'microsoft', radius: false }
+      ]
     }
   },
   mounted () {
     this.getCodeImage()
   },
   methods: {
+    resolveLogo(logo) {
+      return require(`@/assets/socialLogo/${logo}`)
+    },
     loginSocial() {
-      axios.post('http://localhost:9030/auth/social/render').then(res => {
-        debugger
-        // console.log(res)
-      })
+      const url = `http://localhost:9030/auth/social/render`
+      window.open(url, 'newWindow', `resizable=yes, height=${this.page.height}, width=${this.page.width}, top=10%, left=10%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no`)
+      window.addEventListener('message', this.resolveSocialLogin, false)
+    },
+    resolveSocialLogin(e) {
+      debugger
+      const data = e.data
+      console.log(JSON.stringify(data))
+      // const that = this
+      // if (data.message === 'not_bind') {
+      //   that.login.type = 'bind'
+      //   const authUser = data.data
+      //   that.authUser = authUser
+      //   that.$confirm(that.$t('common.current') + authUser.source + that.$t('common.socialAccount') + authUser.nickname + that.$t('common.socialTips'), that.$t('common.tips'), {
+      //     confirmButtonText: that.$t('common.signLogin'),
+      //     cancelButtonText: that.$t('common.bindLogin'),
+      //     type: 'warning'
+      //   }).then(() => {
+      //     that.tabActiveName = 'signLogin'
+      //   }).catch(() => {
+      //     that.tabActiveName = 'bindLogin'
+      //   })
+      // } else if (data.message === 'social_login_success') {
+      //   that.saveLoginData(data.data)
+      //   that.getUserDetailInfo()
+      //   that.loginSuccessCallback()
+      // } else {
+      //   // do nothing
+      // }
     },
     // 点击重置按钮，重置表单数据
     resetLoginForm () {
@@ -162,105 +205,6 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-  .login_container {
-    background-color: #2b4b6b;
-    height: 100%;
-    background-image: url('../assets/img/light-streaks-32906012.jpg');
-  }
-
-  .login-info {
-    position: absolute;
-    left: -300%;
-    top: 44%;
-    margin-top: -100px;
-    color: #fff;
-
-    .title {
-      font-size: 1.8rem;
-      font-weight: 600;
-    }
-
-    .sub-title {
-      font-size: 1.5rem;
-      margin: .3rem 0 .7rem 1rem;
-    }
-
-    .desc {
-      font-size: .96rem;
-      line-height: 1.9rem;
-    }
-  }
-
-  .login_box {
-    width: 350px;
-    height: 450px;
-    background-color: #eeeeee;
-    border-radius: 3px;
-    position: absolute;
-    left: 80%;
-    top: 65%;
-    transform: translate(-50%, -50%);
-
-    .avatar_box {
-      height: 130px;
-      width: 130px;
-      border: 1px solid #eee;
-      border-radius: 50%;
-      padding: 10px;
-      box-shadow: 0 0 10px #ddd;
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #fff;
-
-      img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background-color: #eeeeee
-      }
-    }
-  }
-
-  .login_button {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .login_form {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 0 20px;
-    box-sizing: border-box;
-
-    .code-image {
-      display: inline-block;
-      vertical-align: top;
-      //cursor: pointer;
-      height: 40px;
-      float: right;
-    }
-  }
-
-  .login-footer {
-    text-align: center;
-    display: inline-block;
-    width: 100%;
-    font-size: 14px;
-    color: #0086b3;
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: rgba(0, 0, 0, .85);
-      margin: 0 auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-    }
-  }
+<style lang="less">
+  @import "../components/login.less";
 </style>
