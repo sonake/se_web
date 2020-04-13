@@ -19,7 +19,7 @@
         <el-input v-model="addForm.email"></el-input>
       </el-form-item>
       <el-form-item label="角色" prop="roleId">
-        <el-select v-model="addForm.roleId" multiple placeholder="请选择角色">
+        <el-select v-model="addForm.roleId" multiple placeholder="请选择角色" style="width: 100%">
           <el-option
             v-for="item in roleData"
             :key="item.id"

@@ -148,17 +148,17 @@ export default {
         return this.$msg('请选择要删除的数据')
       }
       let that = this
-      this.$confirm('此操作将永久删除该字典数据, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该数据权限, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
         center: true
       }).then(() => {
-        that.$delete('/system/dict?dictIds=' + this.ids).then(res => {
-          if (res.status !== 200) return this.$msg.error('删除字典数据失败!')
-          that.$msg.success('删除字典数据成功！')
+        that.$delete('/system/data/access?dataIds=' + this.ids).then(res => {
+          if (res.status !== 200) return this.$msg.error('删除数据权限失败!')
+          that.$msg.success('删除数据权限成功！')
           this.ids = ''
-          that.getDictList()
+          that.getList()
         })
       }).catch(() => {
         that.$message({
