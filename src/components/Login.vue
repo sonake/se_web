@@ -5,16 +5,16 @@
         <img src="../assets/logo.png">
       </div>
       <div>
-        <div class="login-info">
-          <div class="title">Hc Cloud</div>
-          <div class="sub-title">分布式微服务权限系统</div>
-          <div class="desc">1. 基于Spring Boot 2.1.8 & Spring Cloud Greenwich.SR3</div>
-          <div class="desc">2. 使用Spring Cloud OAuth2统一认证</div>
-          <div class="desc">3. 认证服务器资源服务器分离，方便拓展</div>
-          <div class="desc">4. 前后端分离架构，提高软件开发效率</div>
-          <div class="desc">5. 集成多种监控，为微服务保驾护航</div>
-          <div class="desc">6. 提供详细的文档，手把手教你从零搭建到部署</div>
-        </div>
+<!--        <div class="login-info">-->
+<!--          <div class="title">Hc Cloud</div>-->
+<!--          <div class="sub-title">分布式微服务权限系统</div>-->
+<!--          <div class="desc">1. 基于Spring Boot 2.1.8 & Spring Cloud Greenwich.SR3</div>-->
+<!--          <div class="desc">2. 使用Spring Cloud OAuth2统一认证</div>-->
+<!--          <div class="desc">3. 认证服务器资源服务器分离，方便拓展</div>-->
+<!--          <div class="desc">4. 前后端分离架构，提高软件开发效率</div>-->
+<!--          <div class="desc">5. 集成多种监控，为微服务保驾护航</div>-->
+<!--          <div class="desc">6. 提供详细的文档，手把手教你从零搭建到部署</div>-->
+<!--        </div>-->
         <el-form ref="loginFormRef" label-width="0px" class="login_form" :model="loginForm" :rules="ruleForm">
           <div class="title-container">
             <h6 class="title">

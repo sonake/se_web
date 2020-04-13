@@ -96,6 +96,7 @@ export default {
         let that = this
         this.$get('/system/menu/' + user.id).then(res => {
           that.menuList = res.data.data
+          console.dir(that.menuList)
         })
       }
     },

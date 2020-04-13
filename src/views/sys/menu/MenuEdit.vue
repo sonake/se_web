@@ -122,11 +122,12 @@ export default {
     handleSubmit() {
       this.$refs.editFormRef.validate(valid => {
         if (valid) {
-          this.$put('/system/user', this.editForm).then(res => {
+          debugger
+          this.$put('/system/menu', this.editForm).then(res => {
             // console.log(res)
             if (res.status !== 200) {
               this.$emit('close')
-              return this.$msg.error('修改用户失败!')
+              return this.$msg.error('修改菜单失败!')
             }
             this.$emit('success')
           })

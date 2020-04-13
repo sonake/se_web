@@ -185,7 +185,7 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-        that.$delete('/system/user?userIds=' + this.ids).then(res => {
+        that.$delete('/system/menu?menuIds=' + this.ids).then(res => {
           if (res.status !== 200) return this.$msg.error('删除菜单失败!')
           that.$msg.success('删除菜单成功！')
           this.ids = ''

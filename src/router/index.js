@@ -10,6 +10,7 @@ import Menu from '../views/sys/menu/Menu'
 import Dict from '../views/sys/dict/Dict'
 import Dept from '../views/sys/dept/Dept'
 import Area from '../views/sys/area/Area'
+import Data from '../views/sys/data/Data'
 // import {User, Role, Menu, Dict} from '../views/sys'
 
 Vue.use(VueRouter)
@@ -57,6 +58,10 @@ const routes = [
       {
         path: '/sys/Area',
         component: Area
+      },
+      {
+        path: '/sys/Data',
+        component: Data
       }
     ]
   }
