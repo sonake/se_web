@@ -40,13 +40,10 @@
               size="mini"
               type="primary"
               @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit"></el-button>
-            <!--分配角色-->
-<!--            <el-tooltip effect="dark" content="分配角色" placement="top-end" :enterable="false">-->
-<!--              <el-button-->
-<!--                size="mini"-->
-<!--                type="warning"-->
-<!--                @click="handleEdit(scope.$index, scope.row)" icon="el-icon-setting"></el-button>-->
-<!--            </el-tooltip>-->
+            <el-button
+              size="mini"
+              type="success"
+              @click="handleSet(scope.$index, scope.row)" icon="el-icon-setting"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -67,13 +64,20 @@
       @close="handleEditClose"
       @success="handleEditSuccess">
     </data-edit>
+    <data-detail-edit
+      ref="dataAccessEdit"
+      :dialogDetailVisible="editDetailVisible"
+      :dialogDetailTitle="editDetailTitle"
+      :access-resource="accessResource">
+    </data-detail-edit>
   </div>
 </template>
 
 <script>
 import DataEdit from './DataEdit'
+import DataDetailEdit from './DataEditDetail'
 export default {
-  components: { DataEdit },
+  components: { DataEdit, DataDetailEdit },
   data() {
     return {
       // 查询参数
@@ -88,7 +92,10 @@ export default {
       roleData: [],
       ids: '',
       editVisible: false,
-      editDialogTitle: ''
+      editDialogTitle: '',
+      editDetailVisible: false,
+      editDetailTitle: '',
+      accessResource: ''
     }
   },
   mounted () {
@@ -134,6 +141,12 @@ export default {
       this.editVisible = true
       this.$refs.dataAccessEdit.setFormValues(row)
       this.editDialogTitle = '修改'
+    },
+    // 修改
+    handleSet(index, row) {
+      this.editDetailVisible = true
+      this.accessResource = row.accessResource
+      this.editDetailTitle = '数据详情配置'
     },
     handleEditClose() {
       this.editVisible = false

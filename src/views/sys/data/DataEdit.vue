@@ -46,7 +46,7 @@
 </template>
 <script>
 export default {
-  name: 'DataAccessEdit',
+  name: 'DataEdit',
   props: {
     dialogTitle: {
       default: ''
@@ -99,7 +99,6 @@ export default {
   methods: {
     getTableList() {
       this.$get('/system/data/access/tableList').then(res => {
-        debugger
         if (res.data.code !== 200) return this.$msg.error('获取数据库表名信息失败！')
         this.tableNames = res.data.data
       })
@@ -158,6 +157,7 @@ export default {
       this.$refs.formRef.resetFields()
     },
     dialogClose() {
+      this.$refs.formRef.resetFields()
       this.$emit('close')
     }
   }
