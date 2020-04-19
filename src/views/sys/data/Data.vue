@@ -68,6 +68,7 @@
       ref="dataAccessEdit"
       :dialogDetailVisible="editDetailVisible"
       :dialogDetailTitle="editDetailTitle"
+      @close="handleSetClose"
       :access-resource="accessResource">
     </data-detail-edit>
   </div>
@@ -150,6 +151,9 @@ export default {
     },
     handleEditClose() {
       this.editVisible = false
+    },
+    handleSetClose() {
+      this.editDetailVisible = false
     },
     handleEditSuccess(val) {
       this.editVisible = false

@@ -35,6 +35,7 @@ export default {
     return {
       dialogFormVisible: false,
       editForm: {
+        id: '',
         fieldName: '',
         code: '',
         value: ''
